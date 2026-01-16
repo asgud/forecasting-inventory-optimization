@@ -1,24 +1,19 @@
-# 📊 Supply Chain Forecasting & Inventory Optimization
+# 📊 Supply Chain Forecasting & Inventory Optimization with Gen AI Assistant
 
-A data-driven approach to demand forecasting and inventory management for a global retail supply chain.
+A data-driven approach to demand forecasting and inventory management for a global retail supply chain, powered by an AI assistant for interactive insights.
 
+![Supply Chain Dashboard](banner.jpg)
 
 ### 🛠️ Skills & Tools
-![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
-![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat&logo=pandas&logoColor=white)
-![NumPy](https://img.shields.io/badge/NumPy-013243?style=flat&logo=numpy&logoColor=white)
-![Plotly](https://img.shields.io/badge/Plotly-3F4F75?style=flat&logo=plotly&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=streamlit&logoColor=white)
-
-`ABC-XYZ Analysis` `Time Series Forecasting` `Inventory Optimization` `Safety Stock Calculation` `Data Visualization` `Interactive Dashboards`
+`Python` `Pandas` `NumPy` `Matplotlib` `Plotly` `Streamlit` `Time Series Forecasting` `Inventory Management` `ABC-XYZ Analysis` `Gen AI` `LLM Integration` `OpenRouter API`
 
 ---
 
 ## 📋 Business Case
 
-> *This project uses a publicly available supply chain dataset to simulate a real-world inventory optimization scenario.*
-
 ### The Problem
+
+*This project simulates a real-world scenario faced by many retail supply chains.*
 
 A global retail company manages **87 products** across multiple markets. The supply chain team faces two critical challenges:
 
@@ -52,14 +47,11 @@ Build a **data-driven inventory planning system** that:
 - **Data:** 75,564 orders over 145 weeks (2015-2017)
 - **Products:** Focus on AX segment (high-value, stable demand)
 - **Forecast Horizon:** 4-12 weeks ahead
-- **Output:** Interactive dashboard for inventory planning
+- **Output:** Interactive dashboard with AI assistant
 
 ### Methodology
 
-1. **Data Cleaning** — Validate and prepare 75,564 orders
-2. **ABC-XYZ Segmentation** — Identify high-priority products
-3. **Demand Forecasting** — Predict future demand using time series model
-4. **Inventory Optimization** — Calculate safety stock & reorder points
+![Methodology](methodology.png)
 
 ---
 
@@ -70,9 +62,9 @@ Segmented 87 products based on **revenue contribution (ABC)** and **demand varia
 
 | Segment | Products | Revenue Share | Strategy |
 |---------|----------|---------------|----------|
-| **AX** | 6 | 74% | Lean/JIT — High priority, tight control |
-| BX | 3 | 21% | Automated reorder — Moderate monitoring |
-| CY/CZ | 78 | 5% | Minimal stock — Low investment |
+| **AX** | 6 | 74% | Lean/JIT — Frequent replenishment, tight control |
+| BX | 3 | 21% | Automated reorder — System-triggered orders |
+| CY/CZ | 78 | 5% | Minimal stock — Low investment, accept stockouts |
 
 **Insight:** Focus resources on 6 AX products that drive 74% of revenue.
 
@@ -80,52 +72,72 @@ Segmented 87 products based on **revenue contribution (ABC)** and **demand varia
 
 #### Why Time Series Over ML Models?
 
-| Factor | Our Data | Implication |
-|--------|----------|-------------|
-| Variability (CV) | 11.1% | Low — Simple models work well |
-| Trend | Flat (slope = -0.61) | No trend models needed |
-| Seasonality | 9.8% variation | Weak — No seasonal models needed |
-| Features Available | Demand only | No external features for ML |
+| Check | Result | Implication |
+|-------|--------|-------------|
+| Variability (CV) | 11.1% | Low — Demand is stable |
+| Trend | Slope = -0.61 | Flat — No growth/decline |
+| Seasonality | 9.8% | Weak — No repeating patterns |
 
-**Conclusion:** With stable demand and no external features (price, promotions, weather), simple time series models outperform complex ML models which would overfit the data.
+**Conclusion:** With stable, non-seasonal data, simple models perform as well as complex ML models. *"Use the simplest model that solves the problem."*
 
 #### Model Comparison
 
 | Model | MAPE | Result |
 |-------|------|--------|
 | Naive | 19.06% | Baseline |
-| Moving Average (4) | 19.39% | Too slow |
+| Moving Average (4) | 19.39% | Too slow to react |
 | **SES (α=0.6)** | **18.75%** | ✅ Winner |
 
-**Why Simple Exponential Smoothing (SES)?**  
-SES balances reactivity (responds to recent changes) with stability (doesn't overreact to noise).
-
 ### 3. Safety Stock & Reorder Point
-Calculated inventory parameters for each AX product:
 
 ```
 Safety Stock = Z × σ × √(Lead Time)
 Reorder Point = (Avg Demand × Lead Time) + Safety Stock
 ```
 
-| Product | Safety Stock | Reorder Point |
-|---------|--------------|---------------|
-| Field & Stream Gun Safe | 14 units | 40 units |
-| Perfect Fitness Rip Deck | 57 units | 167 units |
-| Nike Running Shoe | 41 units | 97 units |
+Service level of **99%** (Z = 2.33) applied to all AX products for optimal stock protection.
 
-**Service Level:** 99% for all AX products (Z = 2.33)
+### 4. Lead Time Calculation
+
+Calculated from `Days for shipping (real)` column — **Average: 3.48 days** per product for accurate safety stock estimation.
+
+---
+
+## 🤖 AI Assistant
+
+### Why Add an AI Agent?
+
+| Challenge | Solution |
+|-----------|----------|
+| Non-technical stakeholders struggle to interpret results | AI explains concepts in simple terms |
+| Users forget project details | AI has full project context |
+| Repetitive questions about methodology | AI answers instantly, consistently |
+| Reduce hallucination | Knowledge base grounds responses in actual project data |
+
+### How It Works
+
+![AI Agent Workflow](AI.png)
+
+### Technical Details
+
+| Component | Details |
+|-----------|---------|
+| **LLM Provider** | OpenRouter API (free tier) |
+| **Model** | `mistralai/devstral-2512:free` |
+| **Knowledge Base** | Custom `knowledge_base.txt` with project context |
+| **Memory** | Conversation history maintained per session |
+| **Libraries** | `openai`, `python-dotenv` |
 
 ---
 
 ## 📱 Interactive Dashboard
 
-Built a Streamlit app that allows users to:
+Built a Streamlit app with two main features:
 
-✅ Select any AX product  
-✅ View demand forecast (historical + future)  
-✅ Simulate inventory depletion  
-✅ Get reorder recommendations with cost impact  
+| Tab | Description |
+|-----|-------------|
+| **📊 Dashboard** | Product metrics, forecast charts, inventory simulation, recommendations |
+| **💬 Ask AI** | Chat with AI assistant about project or supply chain concepts |
 
 **Try it:** `streamlit run app.py`
 
@@ -139,10 +151,12 @@ Built a Streamlit app that allows users to:
 ├── 03_Forecasting_Models.ipynb   # Model comparison & selection
 ├── 04_Inventory_Optimization.ipynb # Safety stock & reorder calculations
 ├── app.py                        # Streamlit dashboard
+├── agent.py                      # AI agent logic
+├── knowledge_base.txt            # Project context for AI
 ├── data/                         # Raw and processed data
 ├── outputs/                      # Analysis results (CSV)
-├── banner.jpg                    # Dashboard banner image
-└── requirements.txt              # Python dependencies
+├── requirements.txt              # Python dependencies
+└── .env                          # API key (not in repo)
 ```
 
 ---
@@ -151,23 +165,35 @@ Built a Streamlit app that allows users to:
 
 | Limitation | Impact | Future Improvement |
 |------------|--------|-------------------|
-| **Single variable model** | Doesn't account for price, promotions, seasonality | Add external features with ML models |
-| **Static lead time** | Uses average LT, not dynamic | Incorporate supplier variability |
-| **Historical data only** | No real-time inventory tracking | Connect to live inventory system |
-| **AX products only** | 6 of 87 products covered | Extend to BX, CY segments |
+| **Single variable model** | Doesn't account for price, promotions | Add external features with ML |
+| **Static lead time** | Uses average LT | Incorporate supplier variability |
+| **Historical data only** | No real-time tracking | Connect to live inventory system |
+| **AX products only** | 6 of 87 products | Extend to BX, CY segments |
 
 ---
 
 ## 🚀 Getting Started
 
+### 1. Clone Repository
 ```bash
-# Clone repository
 git clone https://github.com/yourusername/supply-chain-forecasting.git
+cd supply-chain-forecasting
+```
 
-# Install dependencies
+### 2. Install Dependencies
+```bash
 pip install -r requirements.txt
+```
 
-# Run dashboard
+### 3. Setup API Key (for AI Assistant)
+Create `.env` file in project root:
+```
+OPENROUTER_API_KEY=sk-or-v1-xxxxxxxxxxxxxxxxxxxx
+```
+Get your free API key from: https://openrouter.ai/keys
+
+### 4. Run Dashboard
+```bash
 streamlit run app.py
 ```
 
@@ -180,13 +206,13 @@ streamlit run app.py
 | Product Segmentation | 6 AX products identified (74% revenue) |
 | Forecast Accuracy | 12-19% MAPE across AX products |
 | Inventory Parameters | Safety stock & reorder points calculated |
-| Decision Tool | Interactive dashboard for inventory planning |
+| Decision Tool | Interactive dashboard with AI assistant |
 
 ---
 
 ## 👤 About
 
-Supply chain professional developing data science skills to bridge the gap between business operations and analytics. This project demonstrates how data-driven approaches can improve inventory management decisions.
+Supply chain professional developing data science and Gen AI skills to bridge the gap between business operations and intelligent analytics. This project demonstrates how data-driven forecasting combined with an AI-powered assistant can improve inventory management decisions and make insights accessible to all stakeholders.
 
 ---
 

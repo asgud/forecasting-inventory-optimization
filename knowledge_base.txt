@@ -1,0 +1,195 @@
+==============================================================================
+PROJECT: SUPPLY CHAIN FORECASTING & INVENTORY OPTIMIZATION
+==============================================================================
+
+OVERVIEW:
+- Dataset: DataCo Smart Supply Chain Dataset
+- Records: 75,564 orders
+- Time Period: 145 weeks (2015-2017)
+- Total Products: 87
+- Focus: AX products (high value, stable demand)
+
+==============================================================================
+METHODOLOGY
+==============================================================================
+
+Step 1: Data Cleaning
+- Removed duplicates and invalid records
+- Handled missing values
+- Converted date columns to proper format
+- Final clean dataset: 75,564 orders
+
+Step 2: ABC-XYZ Analysis
+- ABC: Categorized products by revenue contribution
+  - A: Top products (80% revenue)
+  - B: Medium products (15% revenue)
+  - C: Low products (5% revenue)
+- XYZ: Categorized by demand variability (Coefficient of Variation)
+  - X: Stable demand (CV < 0.25)
+  - Y: Moderate variability (0.25 < CV < 0.5)
+  - Z: High variability (CV > 0.5)
+- Combined into segments: AX, AY, AZ, BX, BY, BZ, CX, CY, CZ
+
+Step 3: Demand Forecasting
+- Analyzed data patterns before model selection
+- Tested 3 models: Naive, Moving Average (4), Simple Exponential Smoothing
+- Selected SES (alpha=0.6) as best model
+
+Step 4: Inventory Optimization
+- Calculated Safety Stock and Reorder Point for AX products
+- Used 99% service level (Z-score = 2.33)
+- Formula: Safety Stock = Z × Std Dev × √(Lead Time)
+- Formula: Reorder Point = (Avg Demand × Lead Time) + Safety Stock
+
+==============================================================================
+KEY RESULTS
+==============================================================================
+
+AX PRODUCTS IDENTIFIED (6 products, 74% of total revenue):
+
+1. Field & Stream Sportsman 16 Gun Fire Safe
+   - Unit Price: $399.98
+   - Avg Weekly Demand: 52 units
+   - Safety Stock: 14 units
+   - Reorder Point: 40 units
+   - Forecast MAPE: 14.6%
+
+2. Perfect Fitness Perfect Rip Deck
+   - Unit Price: $59.99
+   - Avg Weekly Demand: 222 units
+   - Safety Stock: 57 units
+   - Reorder Point: 167 units
+   - Forecast MAPE: 12.3%
+
+3. Diamondback Women's Serene Classic Comfort Bike
+   - Unit Price: $299.98
+   - Avg Weekly Demand: 41 units
+   - Safety Stock: 13 units
+   - Reorder Point: 34 units
+   - Forecast MAPE: 18.7%
+
+4. Nike Men's Free 5.0+ Running Shoe
+   - Unit Price: $99.99
+   - Avg Weekly Demand: 112 units
+   - Safety Stock: 41 units
+   - Reorder Point: 97 units
+   - Forecast MAPE: 17.6%
+
+5. Nike Men's Dri-FIT Victory Golf Polo
+   - Unit Price: $50.00
+   - Avg Weekly Demand: 191 units
+   - Safety Stock: 56 units
+   - Reorder Point: 151 units
+   - Forecast MAPE: 12.7%
+
+6. Pelican Sunstream 100 Kayak
+   - Unit Price: $199.99
+   - Avg Weekly Demand: 46 units
+   - Safety Stock: 13 units
+   - Reorder Point: 36 units
+   - Forecast MAPE: 17.2%
+
+==============================================================================
+MODEL SELECTION JUSTIFICATION
+==============================================================================
+
+WHY SIMPLE EXPONENTIAL SMOOTHING (SES) OVER ML MODELS?
+
+Data Pattern Analysis Results:
+- Coefficient of Variation (CV): 11.1% → Low variability
+- Trend: Slope = -0.61 → Essentially flat, no trend
+- Seasonality: 9.8% variation → Weak seasonality
+
+Model Comparison Results:
+| Model              | MAE (units) | MAPE (%) |
+|--------------------|-------------|----------|
+| Naive              | 100         | 19.06    |
+| Moving Average (4) | 97          | 19.39    |
+| SES (α=0.6)        | 94          | 18.75    | ← Winner
+
+Conclusion: With stable, non-seasonal data, simple models perform as well as 
+complex ML models. SES was chosen because it:
+- Achieved lowest MAPE (18.75%)
+- Balances reactivity with stability
+- Is computationally efficient
+- Easy to interpret and maintain
+
+==============================================================================
+INVENTORY PARAMETERS
+==============================================================================
+
+Service Level Strategy:
+- AX products: 99% service level (Z = 2.33) → High priority, cannot afford stockout
+- BX products: 95% service level (Z = 1.65) → Automated reorder
+- CY/CZ products: 90% service level (Z = 1.28) → Minimal stock
+
+Average Lead Time: 3.48 days (0.50 weeks)
+
+Order Calculation Method: Order Up-To Level
+- Target Stock = (Avg Weekly Demand × Weeks of Supply) + Safety Stock
+- Order Quantity = Target Stock - Current Stock
+
+==============================================================================
+LEAD TIME CALCULATION
+==============================================================================
+
+Source: "Days for shipping (real)" column from raw data
+- This represents actual delivery time, not scheduled/planned time
+
+Lead Time Statistics:
+- Mean: 3.48 days (0.50 weeks)
+- Min: 0 days
+- Max: 6 days
+
+Calculation Method:
+- Overall average used: df['Days for shipping (real)'].mean() = 3.48 days
+- Also calculated per product for more accuracy
+
+Lead Time per AX Product:
+| Product                                    | Lead Time (days) |
+|--------------------------------------------|------------------|
+| Field & Stream Sportsman 16 Gun Fire Safe  | 3.51             |
+| Perfect Fitness Perfect Rip Deck           | 3.50             |
+| Diamondback Women's Serene Classic Comfort | 3.46             |
+| Nike Men's Free 5.0+ Running Shoe          | 3.47             |
+| Nike Men's Dri-FIT Victory Golf Polo       | 3.48             |
+| Pelican Sunstream 100 Kayak                | 3.45             |
+
+Note: Lead times are very consistent across products (~3.5 days), 
+so using average lead time is reasonable for this dataset.
+
+Why "Real" vs "Scheduled":
+- "Days for shipping (real)" = Actual historical performance
+- "Days for shipment (scheduled)" = What was planned
+- Used "real" because it reflects actual delivery performance
+
+==============================================================================
+PROJECT LIMITATIONS
+==============================================================================
+
+1. Single Variable Model: Only uses historical demand, doesn't account for 
+   price changes, promotions, or external factors
+
+2. Static Lead Time: Uses average lead time (3.48 days), doesn't account for 
+   supplier variability
+
+3. Historical Data Only: No real-time inventory tracking
+
+4. Limited Scope: Only covers 6 AX products (though they represent 74% revenue)
+
+Future Improvements:
+- Add ML models with external features (price, promotions, weather)
+- Incorporate dynamic lead time predictions
+- Extend analysis to BX and CY segments
+- Connect to real-time inventory system
+
+==============================================================================
+TOOLS & TECHNOLOGIES USED
+==============================================================================
+
+- Python (pandas, numpy)
+- Visualization (matplotlib, plotly)
+- Dashboard (Streamlit)
+- Forecasting (Simple Exponential Smoothing)
+
+==============================================================================
