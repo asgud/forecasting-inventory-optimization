@@ -7,6 +7,24 @@ A data-driven approach to demand forecasting and inventory management for a glob
 ### 🛠️ Skills & Tools
 `Python` `Pandas` `NumPy` `Matplotlib` `Plotly` `Streamlit` `Time Series Forecasting` `Inventory Management` `ABC-XYZ Analysis` `Gen AI` `LLM Integration` `OpenRouter API`
 
+## 🛠️ Skills & Tools
+
+![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge\&logo=python\&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-Data%20Analysis-150458?style=for-the-badge\&logo=pandas\&logoColor=white)
+![Matplotlib](https://img.shields.io/badge/Matplotlib-Visualization-11557C?style=for-the-badge)
+![Streamlit](https://img.shields.io/badge/Streamlit-App%20Framework-FF4B4B?style=for-the-badge\&logo=streamlit\&logoColor=white)
+
+![Time Series Forecasting](https://img.shields.io/badge/Time%20Series-Forecasting-blue?style=for-the-badge)
+![Inventory Management](https://img.shields.io/badge/Inventory-Management-success?style=for-the-badge)
+![ABC-XYZ Analysis](https://img.shields.io/badge/ABC--XYZ-Analysis-yellowgreen?style=for-the-badge)
+
+
+![Gen AI](https://img.shields.io/badge/Generative-AI-purple?style=for-the-badge)
+![LLM Integration](https://img.shields.io/badge/LLM-Integration-8A2BE2?style=for-the-badge)
+![OpenRouter API](https://img.shields.io/badge/OpenRouter-API-black?style=for-the-badge)
+
+
+🔗 **Live Demo:** [Forecasting-Inventory Optimization.app](https://forecasting-inventory-optimization-ai-agent.streamlit.app///)
 ---
 
 ## 📋 Business Case
