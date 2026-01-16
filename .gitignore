@@ -3,11 +3,7 @@ Test_code/
 Files/
 VE/
 .env
-
-# Project Images
-AI.png
-banner.jpg
-methodology.png
+__pycache__/
 
 # notes
 # Ignore file
