@@ -4,6 +4,8 @@ Files/
 VE/
 .env
 __pycache__/
+*.py[cod]
+*$py.class
 
-# notes
-# Ignore file
+# OS
+.DS_Store
